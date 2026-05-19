@@ -2,18 +2,14 @@ import { Link } from "expo-router";
 import { useEffect, useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 
-interface Pokemon {
+export interface IPokemon {
   name: string;
   image: string;
   backImage: string;
-  types: PokemonType[];
-}
-
-interface PokemonType {
-  type: {
-    name: string,
-    url: string,
-  }
+  types: string[];
+  weight?: number;
+  height?: number;
+  stats?: any;
 }
 
 export const colorByType = {
@@ -38,7 +34,7 @@ export const colorByType = {
 };
 
 export default function Index() {
-  const [pokemonList, setPokemonList] = useState<Pokemon[]>([]);
+  const [pokemonList, setPokemonList] = useState<IPokemon[]>([]);
 
   useEffect(() => {
     const fetchPokemonData = async () => {
@@ -55,7 +51,7 @@ export default function Index() {
               name: pokemon?.name,
               image: details?.sprites?.front_default || details?.sprites?.front_shiny,
               backImage: details?.sprites?.back_default || details?.sprites?.back_shiny,
-              types: details?.types,
+              types: details?.types?.map((t: any) => t.type.name),
             }
           })
         )
@@ -75,14 +71,14 @@ export default function Index() {
       {pokemonList?.map(pokemon => (
         <Link
           key={pokemon.name}
-          href={{ pathname: '/details', params: { name: pokemon.name } }}
+          href={{ pathname: '/details', params: { name: pokemon.name, type: pokemon.types[0] } }}
           style={[{
             // @ts-ignore
-            backgroundColor: colorByType[pokemon?.types?.[0]?.type?.name] + 50,
+            backgroundColor: colorByType[pokemon?.types[0]] + 50,
           }, styles.pokemonContainer]}>
           <View style={styles.contentContainer}>
-            <Text style={styles.title}>{pokemon.name}</Text>
-            <Text style={styles.type}>{pokemon?.types?.[0]?.type?.name}</Text>
+            <Text style={styles.title}>{(pokemon.name).toUpperCase()}</Text>
+            <Text style={styles.type}>Type: {pokemon?.types[0]}</Text>
             <View style={styles.imageContainer}>
               <Image source={{ uri: pokemon.image }} style={styles.imageSize} />
               <Image source={{ uri: pokemon.backImage }} style={styles.imageSize} />
@@ -115,7 +111,7 @@ const styles = StyleSheet.create({
     height: 150,
   },
   title: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
   },
