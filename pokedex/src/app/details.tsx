@@ -1,7 +1,7 @@
 import { Stack, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { colorByType, IPokemon } from '../app/index';
+import { colorByType, IPokemon } from './index';
 
 const getStatColor = (statName: string) => {
     switch (statName) {
@@ -167,10 +167,6 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
         flex: 1,
         marginLeft: 10,
-    },
-    barFill: {
-        height: '100%',
-        borderRadius: 10,
     },
     statRow: {
         flexDirection: 'row',
